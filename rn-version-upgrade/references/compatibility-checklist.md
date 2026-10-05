@@ -34,6 +34,6 @@ Check every row between baseline and target before touching files. A mismatch he
 
 ## Third-party native-code libraries
 
-Check compatibility for: `react-native-reanimated`, `react-native-gesture-handler`, `react-native-screens`, `@react-navigation/*`, `react-native-svg`, `@react-native-async-storage/async-storage`, `@react-native-community/netinfo`, `react-native-vector-icons`.
+Derive the list from the project's own `package.json` — don't check a fixed list, and don't check libraries that aren't actually installed. A dependency needs checking if it ships native code: `react-native-*`, `@react-native-*`, `@react-native-community/*` scoped packages, plus any other package with an `ios/` or `android/` folder in its own repo (e.g. RN Paper, Firebase modules like `@react-native-firebase/*`, WebView). Pure-JS packages (no native folder, no native module registration) don't need this check.
 
-For each: does the installed version declare compatibility with the target RN version (changelog/releases/peerDependencies)? If New Architecture is enabled, does it support that too? Use `reactnative.directory` for a fast first pass (see `research-sources.md`); fall back to the library's own repo if the directory is stale.
+For each installed native-code dependency: does the installed version declare compatibility with the target RN version (changelog/releases/peerDependencies)? If New Architecture is enabled, does it support that too? Use `reactnative.directory` for a fast first pass (see `research-sources.md`); fall back to the library's own repo if the directory is stale.

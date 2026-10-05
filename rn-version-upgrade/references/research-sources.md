@@ -19,6 +19,7 @@ Summarize which files changed and how much (a two-line `Podfile` tweak vs. a rew
 
 - `reactnative.dev/docs/upgrading` — general guidance
 - `github.com/facebook/react-native/releases` — authoritative breaking-changes list. Read every minor version between baseline and target, not just the target — breaking changes accumulate
+- **Patch fast path** (baseline and target share the same minor): read only the target patch's own release entry here — not every minor, not the full diff compare. This is the one check that stands in for all of Phase 1 on a patch-only bump.
 
 ## Community issues
 

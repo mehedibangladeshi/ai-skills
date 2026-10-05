@@ -1,6 +1,6 @@
 # UPGRADE_PLAN.md Template
 
-Create this file at the project root right after Phase 0's detection. Keep it updated — subagents write findings here directly, and it's the resume point if interrupted.
+Create this file at the project root right after Phase 0's detection. Keep it updated — subagents write findings here directly, and it's the resume point if interrupted. Before starting any phase, check its Status checkbox below: if already checked and that phase's section is populated, skip it instead of re-running.
 
 ```markdown
 # React Native Upgrade Plan
@@ -16,9 +16,10 @@ Create this file at the project root right after Phase 0's detection. Keep it up
 ## Target
 - react-native: <version> (pinned from minor <X.XX>)
 - react: <version required by target>
+- Fast path: <full research | patch-only — same minor as baseline>
 
 ## Core diff summary
-<2-4 sentences: which files changed, how extensively, anything unusual>
+<2-4 sentences: which files changed, how extensively, anything unusual. Skip this whole section on the patch fast path — write "N/A, patch fast path" instead.>
 Diff source: https://github.com/react-native-community/rn-diff-purge/compare/release/<from>...release/<to>
 
 ## Toolchain compatibility
