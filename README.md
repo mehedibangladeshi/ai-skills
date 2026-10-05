@@ -11,6 +11,7 @@ Each skill is a self-contained directory with a `SKILL.md` (the instructions Cla
 | [`rn-version-upgrade`](rn-version-upgrade) | Orchestrates a React Native version upgrade (JS, Android, iOS) using the official Upgrade Helper diff, library compatibility research, and iterative build verification. |
 | [`research-app-gaps`](research-app-gaps) | Mines App Store/Play Store reviews, Product Hunt comments, and Reddit threads to surface unmet user needs in an app niche, ranked as a gap report. |
 | [`research-competitor-analysis`](research-competitor-analysis) | Profiles the top competitors in an app/software niche (positioning, pricing, sentiment, GTM, SWOT) and synthesizes a market verdict and "how to win" playbook. |
+| [`orchestrate`](orchestrate) | Grills a plan against your docs, previews it for approval, then delegates the build to Haiku/Sonnet sub-agents (max 3 live) with tiered verification. Manual only: `/orchestrate <goal>`. |
 
 ## Install
 
@@ -21,6 +22,7 @@ git clone https://github.com/mehedibangladeshi/ai-skills.git
 ln -s "$(pwd)/ai-skills/rn-version-upgrade" ~/.claude/skills/rn-version-upgrade
 ln -s "$(pwd)/ai-skills/research-app-gaps" ~/.claude/skills/research-app-gaps
 ln -s "$(pwd)/ai-skills/research-competitor-analysis" ~/.claude/skills/research-competitor-analysis
+ln -s "$(pwd)/ai-skills/orchestrate" ~/.claude/skills/orchestrate
 ```
 
 ### A single skill (no cloning required)
