@@ -12,6 +12,7 @@ Each skill is a self-contained directory with a `SKILL.md` (the instructions Cla
 | [`research-app-gaps`](research-app-gaps) | Mines App Store/Play Store reviews, Product Hunt comments, and Reddit threads to surface unmet user needs in an app niche, ranked as a gap report. |
 | [`research-competitor-analysis`](research-competitor-analysis) | Profiles the top competitors in an app/software niche (positioning, pricing, sentiment, GTM, SWOT) and synthesizes a market verdict and "how to win" playbook. |
 | [`orchestrate`](orchestrate) | Grills a plan against your docs, previews it for approval, then delegates the build to Haiku/Sonnet sub-agents (max 3 live) with tiered verification. Manual only: `/orchestrate <goal>`. |
+| [`git-commit`](git-commit) | Drafts, validates, previews, and makes a Conventional Commits v1.0.0 commit (`type(scope): desc`), with bundled self-tested scripts, then offers to push. Manual only: `/git-commit`. |
 
 ## Install
 
@@ -23,6 +24,7 @@ ln -s "$(pwd)/ai-skills/rn-version-upgrade" ~/.claude/skills/rn-version-upgrade
 ln -s "$(pwd)/ai-skills/research-app-gaps" ~/.claude/skills/research-app-gaps
 ln -s "$(pwd)/ai-skills/research-competitor-analysis" ~/.claude/skills/research-competitor-analysis
 ln -s "$(pwd)/ai-skills/orchestrate" ~/.claude/skills/orchestrate
+ln -s "$(pwd)/ai-skills/git-commit" ~/.claude/skills/git-commit
 ```
 
 ### A single skill (no cloning required)
