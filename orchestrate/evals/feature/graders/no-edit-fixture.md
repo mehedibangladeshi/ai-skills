@@ -1,0 +1,1 @@
+../../_common/no-edit-fixture.md
