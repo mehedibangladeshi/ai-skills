@@ -55,6 +55,8 @@ Create files only when you have something to write. Start CONTEXT.md when the fi
 
 **Update CONTEXT.md inline:** When a term settles, update it right away. Don't batch changes. Use [CONTEXT-FORMAT.md](./CONTEXT-FORMAT.md).
 
+If `CONTEXT-MAP.md` exists, put each term in the context that owns it; a term used by several contexts goes in the one that defines it, and the others link to it. Same for ADRs: record a decision in the context it governs.
+
 CONTEXT.md is a glossary only. Do not include implementation details, specs, scratch pads, or implementation decisions.
 
 **Offer ADRs sparingly:** Offer to write an ADR only when all three are true:
@@ -64,3 +66,5 @@ CONTEXT.md is a glossary only. Do not include implementation details, specs, scr
 3. **Real trade-off** — there were genuine alternatives you chose among for good reasons
 
 If any is missing, skip the ADR. Use [ADR-FORMAT.md](./ADR-FORMAT.md).
+
+**Exit grilling** as SKILL.md Phase 1 **Exit** says.
