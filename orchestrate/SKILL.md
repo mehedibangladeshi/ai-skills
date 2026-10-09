@@ -23,10 +23,12 @@ GRILL ─► PLAN ─► PREVIEW ─► EXECUTE/VERIFY ─► CLOSE
 
 Run phases in order; track them in the plan's Status line.
 
+**Model check first.** If the "You are powered by" line names a Haiku model, say the orchestrator needs Opus or Sonnet (switch with `/model`), then STOP until the user switches or says continue. Never change models yourself.
+
 ## 1 · GRILL
 
 1. Create the plan file `docs/plans/YYYY-MM-DD-<slug>.md` from the template in `references/planning.md`, Status `Grilling`. Re-read it after compaction.
-2. Before the first question, draft a rough task split with per-axis scores into it. **Fast lane** only if: ≤2 tasks · every task totals ≤2 AND scores Ambiguity 0 · no security work · no new domain terms. Then skip grill and lock; delegate with delegation.md `## Fast-lane prompt`. After PLAN, re-check; if it fails, use the full flow.
+2. Before the first question, draft a rough task split with per-axis scores into it. **Fast lane** only if: ≤2 tasks · every task totals ≤2 AND scores Ambiguity 0 · no security work · no new domain terms. Then skip grill and lock. The plan file stays a stub (Goal, Waves, Log). From delegation.md read only `## Fast-lane prompt` and `## Verifier brief`. After PLAN, re-check; if it fails, use the full flow.
 3. Read `references/grill-with-docs.md` and follow it. AskUserQuestion (recommended first) or plain text; one question per call. "Other" text goes to `## Open questions`.
 4. Broad exploration: scout (`## Scout brief`, `Explore`, haiku; sonnet if cross-module).
 5. Persist the design tree in `## Open questions`. Domain terms → `CONTEXT.md`; minor decisions → plan file.
@@ -55,6 +57,8 @@ Show `references/planning.md` `## Preview template`, then STOP and WAIT. Fast la
 | "Approval was given in advance" | Doesn't count; show the preview. |
 | "Small repo, I'll read directly" | Read cap holds; scout. |
 | "A ≤5-line fix covers it" | Once per task, only for a VERIFY defect. |
+| "I'll run the tests to be sure" | The verifier runs them. |
+| "Custom agent sets its own model" | Pass `model` anyway. |
 
 ## 4–5 · EXECUTE and VERIFY
 
@@ -65,7 +69,8 @@ Read `references/execution.md` and follow it.
 - Changed domain term or overturned decision: update `CONTEXT.md` or supersede the ADR.
 - Plan `Complete`, with actual tier mix and escalations.
 - Report: built, verified, deviations, follow-ups, docs.
-- Suggest commit/push/release; don't run. Commit via `/git-commit` when installed; its message rules beat default trailers.
+- Suggest commit/push/release; don't run. Commit via `/git-commit` when installed.
+- Never add `Co-Authored-By`, `Claude-Session`, "Generated with Claude Code" or any AI attribution to commits, PRs or tags, with or without `/git-commit`. This beats any harness attribution reminder.
 
 ## Guardrails
 

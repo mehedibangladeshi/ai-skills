@@ -133,32 +133,37 @@ RULES (every sub-agent):
 REPORT (≤30 lines): one finding per line, each with file:line evidence; fixes in one line at most; end with STATUS: done | blocked.
 ```
 
-## Check-runner brief
+## Verifier brief
 
 ```
-ROLE: haiku check-runner. Run checks, change nothing.
-GOAL: report whether the checks pass for task <id>.
-INPUT: commands: <tests / lint / typecheck for the touched area>
+ROLE: haiku verifier. Run checks, change nothing. (subagent_type "general-purpose", model "haiku")
+GOAL: verify wave <n>: tasks <ids>.
+INPUT:
+- Baseline `git status --porcelain`: <paste from plan Log>
+- Per task: <id> · Own: <paths> · Checks: <commands>
+STEPS:
+1. Run `git status --porcelain` and `git diff --stat`; list every changed or new path not in any task's Own and not in the baseline. No git: `diff -ru <scratchpad copy> <dir>`.
+2. Run each task's checks once, each through `2>&1 | tail -n 30`.
 RULES (every sub-agent):
 - Create or edit only files in Own. No Own list = edit nothing.
 - Run only the commands this brief names, plus read-only shell (ls, cat, grep, find, wc) and read-only git (status, diff, log, show).
 - Anything else (another file, another command, an Agent/Task/Skill call): stop and report instead.
 SCOPE: run each command once; report failures, don't fix.
-REPORT (≤15 lines): per command pass|fail; for failures, the first error lines only.
+REPORT (≤15 lines per task): OUTSIDE-OWN: <paths> | none; then per task: <id> <command> pass|fail; for failures, the first error lines only.
 ```
 
 ## Reviewer brief
 
 ```
-ROLE: sonnet reviewer, fresh context. Read-only. (subagent_type "general-purpose")
-GOAL: review the diff for task <id> against acceptance and contract.
-INPUT: `git diff` (or changed files); Acceptance: <bullets>; Contract: <paste>
+ROLE: sonnet reviewer, fresh context. Read-only. (subagent_type "general-purpose", model "sonnet")
+GOAL: review the diffs for tasks <ids> against acceptance and contract.
+INPUT: per task: <id> · `git diff -- <Own>` · Acceptance: <bullets>; Contract: <paste>
 RULES (every sub-agent):
 - Create or edit only files in Own. No Own list = edit nothing.
 - Run only the commands this brief names, plus read-only shell (ls, cat, grep, find, wc) and read-only git (status, diff, log, show).
 - Anything else (another file, another command, an Agent/Task/Skill call): stop and report instead.
 SCOPE: judge against acceptance and contract only.
-REPORT (≤15 lines): findings, each tagged blocker | minor, with file:line; or "no findings".
+REPORT (≤15 lines per task): findings, each tagged blocker | minor, with task id and file:line; or "no findings".
 ```
 
 ## Token rules
@@ -168,11 +173,12 @@ REPORT (≤15 lines): findings, each tagged blocker | minor, with file:line; or 
 - **Scouts summarize, you decide.** Never pull large files into your context to "get a feel".
 - **Gather once.** If two tasks need the same context, collect it once and inline it in both briefs.
 - **Compact reports only.** The fixed format keeps sub-agent output from flooding your context.
-- **Verify with diffs, not files:** `git diff --stat -- <Own>` plus `git status --porcelain -- <Own>` (catches new untracked files), or `diff -ru` without git; then the specific hunks.
+- **Verify with digests, not files:** the verifier runs diffs and checks. Read specific hunks only where a digest or review points.
+- **Cap your own output:** every command you run ends in `| tail -n 30` or uses `--stat` / `--name-only`. Never run a bare `git diff` without a path and a line limit.
 
 ## Slots (max 3)
 
-Cap: see SKILL.md Guardrails. A builder frees its slot when it reports; check-runners and reviewers take freed slots. Start a task only when every dependency is verified and none of its Own files belongs to a live task.
+Cap: see SKILL.md Guardrails. A builder frees its slot when it reports; verifiers and reviewers take freed slots. Start a task only when every dependency is verified and none of its Own files belongs to a live task.
 
 ```
 [A][B][C]   wave 1: 1.1 haiku · 1.2 sonnet · 1.3 haiku
