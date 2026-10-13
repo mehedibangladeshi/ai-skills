@@ -1,2 +1,6 @@
 .release/
 .DS_Store
+__pycache__/
+docs/
+bench/
+CONTEXT.md
