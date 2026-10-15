@@ -1,1 +1,0 @@
-../../_common/model-explicit.md
