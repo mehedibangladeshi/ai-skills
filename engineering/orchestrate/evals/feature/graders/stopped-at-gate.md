@@ -1,1 +1,0 @@
-../../_common/stopped-at-gate.md

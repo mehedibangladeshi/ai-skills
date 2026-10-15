@@ -1,1 +1,0 @@
-add pluggable output formats to report.sh (text, json, csv), selectable by a --format flag or a REPORT_FORMAT env var, with the formatters shared via utils.sh so every existing caller of utils.sh helpers keeps working, and cover it all in tests

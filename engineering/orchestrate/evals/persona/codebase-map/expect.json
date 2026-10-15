@@ -1,2 +1,0 @@
-{"scout_ran": {"pattern": "\"subagent_type\":\\s*\"Explore\"", "expect": true},
- "scout_has_map": {"pattern": "\"subagent_type\":\\s*\"Explore\".*MAP: graphify|MAP: graphify.*\"subagent_type\":\\s*\"Explore\"", "expect": true}}

@@ -1,1 +1,0 @@
-../../_common/no-git-writes.md

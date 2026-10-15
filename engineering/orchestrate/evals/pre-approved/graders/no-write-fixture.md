@@ -1,1 +1,0 @@
-../../_common/no-write-fixture.md

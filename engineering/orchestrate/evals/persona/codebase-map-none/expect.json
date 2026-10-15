@@ -1,3 +1,0 @@
-{"scout_ran": {"pattern": "\"subagent_type\":\\s*\"Explore\"", "expect": true},
- "scout_map_none": {"pattern": "\"subagent_type\":\\s*\"Explore\".*MAP: none|MAP: none.*\"subagent_type\":\\s*\"Explore\"", "expect": true},
- "scout_claims_graphify": {"pattern": "\"subagent_type\":\\s*\"Explore\".*MAP: graphify|MAP: graphify.*\"subagent_type\":\\s*\"Explore\"", "expect": false}}
