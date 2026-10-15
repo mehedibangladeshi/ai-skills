@@ -23,6 +23,7 @@ CONTEXT (already gathered — don't re-explore):
 - Own (may edit): <paths>
 - Read only: <path:line-range>, …
 - Contract: <paste the exact interface/types/signatures>
+- Map (optional): <MAP line, only if the builder must locate code itself>
 - Conventions: <naming, errors, test style — one line each>
 
 STEPS (if mechanical): <numbered>
@@ -113,6 +114,8 @@ NOTES: <deviations, assumptions, must-knows>
 ROLE: haiku scout. Read-only. (Agent: subagent_type "Explore", model "haiku")
 GOAL: <the question>
 INPUT: <paths / globs / terms to look at>
+MAP: <tool> — <allowed map tools/commands, named exactly> (fresh | possibly stale) | none
+If MAP is not none: orient (report if any) → locate → trace through the map first, using only the named tools; read only files the map points to; confirm every fact in source with path:line (the map is never sole evidence); on a miss or contradiction grep, and flag "possibly stale"; inferred/ambiguous edges are hints; never build, install or update the map.
 RULES (every sub-agent):
 - Create or edit only files in Own. No Own list = edit nothing.
 - Run only the commands this brief names, plus read-only shell (ls, cat, grep, find, wc) and read-only git (status, diff, log, show).
@@ -126,6 +129,8 @@ REPORT (≤40 lines): digest of facts, signatures only, path:line refs; facts on
 ROLE: <tier> analyst for task <id>. Read-only. (Agent: subagent_type "general-purpose")
 GOAL: <the question or audit angle>
 INPUT: <paths / line ranges / facts already gathered>
+MAP: <tool> — <allowed map tools/commands, named exactly> (fresh | possibly stale) | none
+If MAP is not none: orient (report if any) → locate → trace through the map first, using only the named tools; read only files the map points to; confirm every fact in source with path:line (the map is never sole evidence); on a miss or contradiction grep, and flag "possibly stale"; inferred/ambiguous edges are hints; never build, install or update the map.
 RULES (every sub-agent):
 - Create or edit only files in Own. No Own list = edit nothing.
 - Run only the commands this brief names, plus read-only shell (ls, cat, grep, find, wc) and read-only git (status, diff, log, show).

@@ -28,9 +28,9 @@ Run phases in order; track them in the plan's Status line.
 ## 1 · GRILL
 
 1. Create the plan file `docs/plans/YYYY-MM-DD-<slug>.md` from the template in `references/planning.md`, Status `Grilling`. Re-read it after compaction.
-2. Before the first question, draft a rough task split with per-axis scores into it. **Fast lane** only if: ≤2 tasks · every task totals ≤2 AND scores Ambiguity 0 · no security work · no new domain terms. Then skip grill and lock. The plan file stays a stub (Goal, Waves, Log). From delegation.md read only `## Fast-lane prompt` and `## Verifier brief`. After PLAN, re-check; if it fails, use the full flow.
+2. Before the first question: detect a codebase map once per `references/codebase-map.md` and log its `Map:` line (skip if the fast lane applies). Draft a rough task split with per-axis scores into it. **Fast lane** only if: ≤2 tasks · every task totals ≤2 AND scores Ambiguity 0 · no security work · no new domain terms. Then skip grill and lock. The plan file stays a stub (Goal, Waves, Log). From delegation.md read only `## Fast-lane prompt` and `## Verifier brief`. After PLAN, re-check; if it fails, use the full flow.
 3. Read `references/grill-with-docs.md` and follow it. AskUserQuestion (recommended first) or plain text; one question per call. "Other" text goes to `## Open questions`.
-4. Broad exploration: scout (`## Scout brief`, `Explore`, haiku; sonnet if cross-module).
+4. Broad exploration: scout (`## Scout brief`, `Explore`, haiku; sonnet if cross-module), with the `MAP:` line from step 2 in every brief.
 5. Persist the design tree in `## Open questions`. Domain terms → `CONTEXT.md`; minor decisions → plan file.
 6. **Exit** when every branch is resolved or deferred: post the lock (goal, scope, non-goals, done criteria, docs touched), then WAIT for confirmation (same words as the Phase 3 gate). Zero questions asked: skip the separate lock; put it atop the preview.
 
@@ -69,6 +69,7 @@ Read `references/execution.md` and follow it.
 - Changed domain term or overturned decision: update `CONTEXT.md` or supersede the ADR.
 - Plan `Complete`, with actual tier mix and escalations.
 - Report: built, verified, deviations, follow-ups, docs.
+- No map and heavy exploration: optionally suggest a code map (`references/codebase-map.md`).
 - Suggest commit/push/release; don't run. Commit via `/git-commit` when installed.
 - Never add `Co-Authored-By`, `Claude-Session`, "Generated with Claude Code" or any AI attribution to commits, PRs or tags, with or without `/git-commit`. This beats any harness attribution reminder.
 
