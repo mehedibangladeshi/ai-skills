@@ -19,9 +19,15 @@ My [Claude Code Agent Skills](https://code.claude.com/docs/en/skills), shared in
 | [research-app-gaps](research/research-app-gaps/README.md) | Mines app reviews and Reddit to find unmet needs in an app niche. |
 | [research-competitor-analysis](research/research-competitor-analysis/README.md) | Profiles the top competitors in a niche and suggests how to win. |
 
+### Documentation
+
+| Skill | What it does |
+|---|---|
+| [reflect](documentation/reflect/README.md) | At the end of a session, updates CLAUDE.md, AGENTS.md, docs/ and README to match what changed. Manual: `/reflect`. |
+
 ## Install
 
-`<category>` is `engineering` or `research`; `<skill>` is the folder name.
+`<category>` is `engineering`, `research` or `documentation`; `<skill>` is the folder name.
 
 ```bash
 # A: one skill, no clone
