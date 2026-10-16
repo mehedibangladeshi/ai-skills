@@ -73,7 +73,7 @@ Then start a new Claude Code session. See [INSTALL.md](INSTALL.md) for uninstall
 
 **rn-version-upgrade.** Say "upgrade React Native to 0.84". It pins the exact patch, applies the official diff to Android and then iOS, building after each. A patch-only bump skips the research. Expo projects are redirected. [Read more](engineering/rn-version-upgrade/README.md).
 
-**reflect.** Run `/reflect` at the end of a session. It reads the git diff, finds the docs that describe what changed (CLAUDE.md, AGENTS.md, `docs/`, README) and updates them. It tells you what it left alone. [Read more](documentation/reflect/README.md).
+**reflect.** Run `/reflect` at the end of a session. It reads the git diff, finds the docs that describe what changed (CLAUDE.md, AGENTS.md, `docs/`, README) and updates them. It tells you what it left alone. Optional hook auto-runs it before commits. [Read more](documentation/reflect/README.md).
 
 **research-app-gaps.** Run `/research-app-gaps "<niche>"`. It reads App Store and Play Store reviews, Product Hunt comments and Reddit threads, merges duplicate complaints and ranks the gaps. You get a Markdown and an HTML report. [Read more](research/research-app-gaps/README.md).
 
