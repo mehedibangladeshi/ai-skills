@@ -34,14 +34,26 @@ Then start a new Claude Code session. See [INSTALL.md](INSTALL.md) for uninstall
 
 ## The skills
 
+### Engineering
+
 | Skill | The problem | What's different |
 |---|---|---|
 | [orchestrate](engineering/orchestrate/README.md) | Big goals eat your expensive model's context. | You plan and approve. Cheaper sub-agents build. The orchestrator never writes code. |
 | [git-commit](engineering/git-commit/README.md) | Commit messages drift from your convention. | A shell validator rejects bad headers and AI trailers before the commit happens. |
 | [rn-version-upgrade](engineering/rn-version-upgrade/README.md) | React Native upgrades break in ways you can't trace. | Follows the official Upgrade Helper diff, one platform at a time, with a resumable plan file. |
+
+### Documentation
+
+| Skill | The problem | What's different |
+|---|---|---|
+| [reflect](documentation/reflect/README.md) | Docs go stale the moment a session ends. | Maps changed files to the docs that describe them and edits only those. |
+
+### Research
+
+| Skill | The problem | What's different |
+|---|---|---|
 | [research-app-gaps](research/research-app-gaps/README.md) | You can't tell what users of an app category are missing. | Mines store reviews, Product Hunt and Reddit, then ranks gaps with a visible score. |
 | [research-competitor-analysis](research/research-competitor-analysis/README.md) | You don't know who you'd be up against. | Profiles competitors across the same dimensions and ends with a "how to win" playbook. |
-| [reflect](documentation/reflect/README.md) | Docs go stale the moment a session ends. | Maps changed files to the docs that describe them and edits only those. |
 
 ## Why these and not a prompt?
 
@@ -61,17 +73,11 @@ Then start a new Claude Code session. See [INSTALL.md](INSTALL.md) for uninstall
 
 **rn-version-upgrade.** Say "upgrade React Native to 0.84". It pins the exact patch, applies the official diff to Android and then iOS, building after each. A patch-only bump skips the research. Expo projects are redirected. [Read more](engineering/rn-version-upgrade/README.md).
 
+**reflect.** Run `/reflect` at the end of a session. It reads the git diff, finds the docs that describe what changed (CLAUDE.md, AGENTS.md, `docs/`, README) and updates them. It tells you what it left alone. [Read more](documentation/reflect/README.md).
+
 **research-app-gaps.** Run `/research-app-gaps "<niche>"`. It reads App Store and Play Store reviews, Product Hunt comments and Reddit threads, merges duplicate complaints and ranks the gaps. You get a Markdown and an HTML report. [Read more](research/research-app-gaps/README.md).
 
 **research-competitor-analysis.** Run `/research-competitor-analysis "<niche>"`. The inverse of app-gaps: it maps the whole field, then proposes where to enter and how to win. [Read more](research/research-competitor-analysis/README.md).
-
-**reflect.** Run `/reflect` at the end of a session. It reads the git diff, finds the docs that describe what changed (CLAUDE.md, AGENTS.md, `docs/`, README) and updates them. It tells you what it left alone. [Read more](documentation/reflect/README.md).
-
-## Adding a skill
-
-1. Create `<category>/<name>/` with a `SKILL.md` (frontmatter: `name`, `description`) and a `README.md`.
-2. Package it: `cd <category>/<name> && zip -r ../../<name>.skill . -x 'evals/*'`
-3. Attach the `.skill` file to a GitHub Release.
 
 ## License
 
