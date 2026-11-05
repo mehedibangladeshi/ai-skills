@@ -13,7 +13,7 @@ You finish a branch, then spend ten minutes on the PR. A title that doesn't matc
 - **The model only drafts.** It writes the title and body and ticks the template boxes. `scripts/send.sh` does the validation, the push (`git push -u origin HEAD`), the `gh pr create` and prints the URL.
 - **Nothing moves before you say so.** You see the title, the body and the template choices first. Nothing is pushed before `yes` or `draft`.
 - **It never commits.** A dirty working tree stops the run and points you to `/git-commit`.
-- **It uses your repo's template.** `.github/pull_request_template.md` and similar come first. If there is none, it falls back to the bundled template, which has Description, Related issue, Type of change, Area(s) affected, a DB migration or breaking change block with Door and Blast Radius lines, Screenshots and a Checklist.
+- **It uses your repo's template.** `.github/pull_request_template.md` and similar come first. If there is none, it falls back to the bundled template, a generic one with Description, Related issues, Type of change, Areas affected, Breaking changes (with Door and Blast radius lines), Screenshots and a Reviewer checklist. Areas affected, Type and Related issues are derived from the branch's changed paths, commit headers and refs.
 
 ## Before / after
 
@@ -29,9 +29,24 @@ Base: master  <-  feature/ingest-retry (4 commits, 3 files, +112 -18)
 
 Body:
   ## Description
-  Source fetches now retry on HTTP 429 with jittered backoff, capped at 5 attempts.
+  - Source fetches retry on HTTP 429 with jittered backoff.
+  - Retries capped at 5 attempts.
+  - Retry count logged per source.
+  ## Related issues
+  None
   ## Type of change
-  - [x] New feature
+  - [x] feat: new user-facing capability
+  - [ ] fix: bug fix
+  ...
+  ## Areas affected
+  - [x] src/api: new endpoint
+  ...
+  ## Breaking changes
+  None
+  **Door:** two-way (revert is safe)
+  **Blast radius:** none beyond the retrying source fetches
+  ## Reviewer checklist
+  - [ ] Change matches the description and the linked issues
   ...
 ```
 

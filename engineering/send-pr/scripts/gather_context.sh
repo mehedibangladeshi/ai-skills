@@ -57,6 +57,31 @@ gather() {
   git diff --stat "$ref...HEAD" 2>/dev/null | tail -30
   echo "total_lines: $total"
 
+  echo "=== types ==="
+  local t
+  t=$(git log --reverse --format=%s "$ref..HEAD" 2>/dev/null | sed -nE 's/^([a-z]+)(\([^)]*\))?!?:.*/\1/p' | awk '!s[$0]++')
+  echo "${t:-none}"
+
+  echo "=== areas ==="
+  local ar
+  ar=$(git diff --name-only "$ref...HEAD" 2>/dev/null | awk '
+    { n=split($0, p, "/"); a="(root)"
+      if (n>=2) a=p[1]
+      if (n>=3 && p[1] ~ /^(packages|apps|services|libs|modules|crates|projects|src)$/) a=p[1] "/" p[2]
+      c[a]++ }
+    END { for (a in c) printf "%s\t%d\n", a, c[a] }' | sort -t"$(printf '\t')" -k2,2nr -k1,1 | head -12)
+  echo "${ar:-none}"
+
+  echo "=== issues ==="
+  local is
+  is=$({ echo "$br"; git log --format='%s%n%b' "$ref..HEAD" 2>/dev/null; } \
+    | grep -oE '(^|[^A-Za-z0-9])(#[0-9]+|[A-Z][A-Z0-9]+-[0-9]+)' | sed -E 's/^[^#A-Z]*//' | awk '!s[$0]++')
+  echo "${is:-none}"
+
+  echo "=== breaking ==="
+  if git log --format=%s "$ref..HEAD" 2>/dev/null | grep -Eq '^[a-z]+(\(.*\))?!:' \
+    || git log --format=%b "$ref..HEAD" 2>/dev/null | grep -q 'BREAKING CHANGE'; then echo yes; else echo no; fi
+
   echo "=== template ==="
   local f found="" d="$root/.github/PULL_REQUEST_TEMPLATE"
   for f in .github/pull_request_template.md .github/PULL_REQUEST_TEMPLATE.md docs/pull_request_template.md pull_request_template.md PULL_REQUEST_TEMPLATE.md; do
@@ -165,6 +190,37 @@ STUB
   out=$("$SCRIPT" 2>&1)
   expect "template dir -> MULTIPLE" '^MULTIPLE .*PULL_REQUEST_TEMPLATE$' 1
   expect "template dir lists file" 'PULL_REQUEST_TEMPLATE/bug.md$' 1
+
+  new_repo; git checkout -q -b feat/ABC-12-thing
+  mkdir -p src/foo packages/ui docs
+  echo 1 > src/foo/a.txt; echo 1 > docs/b.md; echo 1 > README.md; echo 1 > packages/ui/c.txt
+  git add -A; git commit -qm "feat(a): x" -m "closes #34"
+  echo 2 >> README.md; git commit -qam "fix: y"
+  out=$("$SCRIPT" 2>&1)
+  expect "types feat then fix" '^=== types ===$' 1
+  [ "$(printf '%s\n' "$out" | sed -n '/^=== types ===$/,/^=== areas ===$/p' | sed '1d;$d' | tr '\n' ' ')" = "feat fix " ] \
+    && { echo "PASS: types order"; pass=$((pass+1)); } || { echo "FAIL: types order"; fail=$((fail+1)); }
+  areas=$(printf '%s\n' "$out" | sed -n '/^=== areas ===$/,/^=== issues ===$/p')
+  for a in "src/foo" "docs" "(root)" "packages/ui"; do
+    printf '%s\n' "$areas" | grep -qF "$a	" && { echo "PASS: area $a"; pass=$((pass+1)); } || { echo "FAIL: area $a"; fail=$((fail+1)); }
+  done
+  issues=$(printf '%s\n' "$out" | sed -n '/^=== issues ===$/,/^=== breaking ===$/p')
+  printf '%s\n' "$issues" | grep -qx 'ABC-12' && { echo "PASS: issue ABC-12"; pass=$((pass+1)); } || { echo "FAIL: issue ABC-12"; fail=$((fail+1)); }
+  printf '%s\n' "$issues" | grep -qx '#34' && { echo "PASS: issue #34"; pass=$((pass+1)); } || { echo "FAIL: issue #34"; fail=$((fail+1)); }
+  [ "$(printf '%s\n' "$out" | sed -n '/^=== breaking ===$/,/^=== template ===$/p' | sed '1d;$d')" = no ] \
+    && { echo "PASS: breaking no"; pass=$((pass+1)); } || { echo "FAIL: breaking no"; fail=$((fail+1)); }
+
+  git checkout -q -b plain; echo 3 > e.txt; git add e.txt; git commit -qm "feat(x)!: y"
+  out=$("$SCRIPT" 2>&1)
+  [ "$(printf '%s\n' "$out" | sed -n '/^=== breaking ===$/,/^=== template ===$/p' | sed '1d;$d')" = yes ] \
+    && { echo "PASS: breaking yes"; pass=$((pass+1)); } || { echo "FAIL: breaking yes"; fail=$((fail+1)); }
+
+  new_repo; git checkout -q -b plain; echo 4 > f.txt; git add f.txt; git commit -qm "update stuff"
+  out=$("$SCRIPT" 2>&1)
+  [ "$(printf '%s\n' "$out" | sed -n '/^=== issues ===$/,/^=== breaking ===$/p' | sed '1d;$d')" = none ] \
+    && { echo "PASS: issues none"; pass=$((pass+1)); } || { echo "FAIL: issues none"; fail=$((fail+1)); }
+  [ "$(printf '%s\n' "$out" | sed -n '/^=== types ===$/,/^=== areas ===$/p' | sed '1d;$d')" = none ] \
+    && { echo "PASS: types none"; pass=$((pass+1)); } || { echo "FAIL: types none"; fail=$((fail+1)); }
 
   cd "$tmp"
   echo "passed=$pass failed=$fail"

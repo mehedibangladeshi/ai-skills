@@ -1,34 +1,37 @@
 ## Description
-<!-- What does this PR do and why? Concise, to the point, no filler words ("just", "basically", "in order to"). Fragments over full sentences are fine. State the change, not a story.
-     List the important things as bullet points (one change/decision per line), not a prose paragraph.
-     If a tiny diagram, call tree or file tree explains it faster than bullets, use one. -->
+<!-- Why and what, as bullets: one change or decision per line, fragments over sentences, no filler words. A tiny diagram, call tree or file tree only when it explains faster than bullets. -->
 
-## Related issue/Slack thread (optional)
+## Related issues
+<!-- One per line from the `issues` section, e.g. `Closes #123` or a ticket/thread link. Write "None" when there are none. -->
 
 ## Type of change
-- [ ] Feature
-- [ ] Fix
-- [ ] Chore/refactor
-- [ ] Docs
+- [ ] feat: new user-facing capability
+- [ ] fix: bug fix
+- [ ] chore: maintenance, tooling, dependencies
+- [ ] docs: documentation only
+- [ ] refactor: restructure without behavior change
+- [ ] test: tests only
+- [ ] perf: performance improvement
+- [ ] style: formatting only
+- [ ] build: build system or dependencies
+- [ ] ci: pipeline or automation
+- [ ] revert: undoes an earlier change
 
-## Area(s) affected
-- [ ] Backend (server/)
-- [ ] edit-app
-- [ ] take-app
-- [ ] reports-app
-- [ ] Shared ui-components (client/packages/) — verify reports-app still builds
-- [ ] DevOps/CI
+## Areas affected
+<!-- One checked line per entry in the `areas` section, each with a short clause on what changed there. -->
 
-## Database migration / breaking change
-- [ ] Includes a DB migration (has both `up()` and `down()`, tested against all regional DBs)
-- [ ] Breaking change (API, schema, or shared component prop)
+## Breaking changes
+- [ ] Breaks an API, schema, config or other public contract
+<!-- If checked: what breaks and how to migrate. Otherwise write "None". -->
+**Door:** <!-- one-way (hard to undo once merged or deployed) | two-way (revert is safe) -->
+**Blast radius:** <!-- who or what breaks if this goes wrong -->
 
-**Door:** <!-- one-way (hard to undo once merged/deployed) | two-way (revert is safe) -->
-**Blast Radius:** <!-- who or what breaks if this goes wrong -->
+## Screenshots (optional)
+<!-- UI changes only: before and after. Leave empty otherwise. -->
 
-## Screenshots (if UI changed)
-
-## Checklist
-- [ ] Ran lint/format for changed apps (`lint:ci` / `format:ci`)
-- [ ] Tests added/updated where applicable (required for edit-app/take-app, not reports-app)
-- [ ] CSS uses 4/8/16/32px spacing scale, no ad-hoc colors/uppercase/bold >500
+## Reviewer checklist
+- [ ] Change matches the description and the linked issues
+- [ ] Tests cover the new or changed behavior, or the description says why not
+- [ ] No unrelated changes, secrets or debug leftovers
+- [ ] Docs updated where behavior changed
+- [ ] Breaking changes carry a migration note
