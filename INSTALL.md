@@ -22,6 +22,7 @@ Everything below is for you, the agent. Follow it step by step.
 |---|---|---|---|
 | orchestrate | engineering | Plans a goal with you, then has cheaper sub-agents build and verify it. | `/orchestrate <goal>` |
 | git-commit | engineering | Drafts, checks and makes a Conventional Commits commit. | `/git-commit` |
+| send-pr | engineering | Drafts, checks and opens a GitHub pull request after you approve a preview. | `/send-pr` |
 | rn-version-upgrade | engineering | Upgrades React Native across JS, Android and iOS, one platform at a time. | say "upgrade React Native to 0.84" |
 | research-app-gaps | research | Mines app reviews and Reddit for unmet needs in an app niche. | `/research-app-gaps "<niche>"` |
 | research-competitor-analysis | research | Profiles the top competitors in a niche and suggests how to win. | `/research-competitor-analysis "<niche>"` |
@@ -47,7 +48,7 @@ If you are not Claude Code, your agent may load skills from a different director
 
 ### 2. Choose skills
 
-Show the table above. Ask one multi-select question: which skills to install. Offer "all six" as a shortcut.
+Show the table above. Ask one multi-select question: which skills to install. Offer "all seven" as a shortcut.
 
 ### 3. Choose the method
 

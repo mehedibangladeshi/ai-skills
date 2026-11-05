@@ -40,6 +40,7 @@ Then start a new Claude Code session. See [INSTALL.md](INSTALL.md) for uninstall
 |---|---|---|
 | [orchestrate](engineering/orchestrate/README.md) | Big goals eat your expensive model's context. | You plan and approve. Cheaper sub-agents build. The orchestrator never writes code. |
 | [git-commit](engineering/git-commit/README.md) | Commit messages drift from your convention. | A shell validator rejects bad headers and AI trailers before the commit happens. |
+| [send-pr](engineering/send-pr/README.md) | PR titles and bodies get written from memory, and the template gets skipped. | Scripts gather context and validate the title and body. You approve the preview before anything is pushed. |
 | [rn-version-upgrade](engineering/rn-version-upgrade/README.md) | React Native upgrades break in ways you can't trace. | Follows the official Upgrade Helper diff, one platform at a time, with a resumable plan file. |
 
 ### Documentation
@@ -70,6 +71,8 @@ Then start a new Claude Code session. See [INSTALL.md](INSTALL.md) for uninstall
 **orchestrate.** Run `/orchestrate <goal>`. It grills you on scope, writes a plan, shows a preview and waits for your approval. Sub-agents then build it, at most 3 live at once, and it verifies the result. `/orchestrate resume` continues a plan. [Read more](engineering/orchestrate/README.md).
 
 **git-commit.** Run `/git-commit`. It infers the scope, drafts a Conventional Commits message, validates it, stages only the files it lists (never `-A`) and asks before it pushes. It never adds `Co-Authored-By`. [Read more](engineering/git-commit/README.md).
+
+**send-pr.** Run `/send-pr`. It gathers the branch context, drafts a Conventional Commits title and a PR body from your repo's template (or the bundled one), validates both and shows a preview. Nothing is pushed until you say `yes` or `draft`. It never commits. Needs `gh`, GitHub only. [Read more](engineering/send-pr/README.md).
 
 **rn-version-upgrade.** Say "upgrade React Native to 0.84". It pins the exact patch, applies the official diff to Android and then iOS, building after each. A patch-only bump skips the research. Expo projects are redirected. [Read more](engineering/rn-version-upgrade/README.md).
 
