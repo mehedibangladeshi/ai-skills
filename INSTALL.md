@@ -3,7 +3,7 @@
 For humans: paste this into Claude Code or any coding agent.
 
 ```
-Fetch and follow https://raw.githubusercontent.com/mehedibangladeshi/ai-skills/master/INSTALL.md
+Fetch and follow https://raw.githubusercontent.com/mehedibangladeshi/ai-skills/main/INSTALL.md
 ```
 
 Everything below is for you, the agent. Follow it step by step.
@@ -94,7 +94,7 @@ fi
 ln -s "$CLONE_DIR/<category>/<skill>" "$SKILLS_DIR/<skill>"
 ```
 
-The default branch is `master`. Use an absolute path for `CLONE_DIR` (expand `~` first) so the symlinks resolve from anywhere.
+The default branch is `main`. Use an absolute path for `CLONE_DIR` (expand `~` first) so the symlinks resolve from anywhere.
 
 ### 6. Verify
 

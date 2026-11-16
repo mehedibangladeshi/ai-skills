@@ -7,7 +7,7 @@ You ask an agent for a feature and it writes a plan, skips the questions, burns 
 Paste this into Claude Code or any coding agent:
 
 ```
-Fetch and follow https://raw.githubusercontent.com/mehedibangladeshi/ai-skills/master/INSTALL.md
+Fetch and follow https://raw.githubusercontent.com/mehedibangladeshi/ai-skills/main/INSTALL.md
 ```
 
 It asks which skills you want, where to put them and how, then checks the result. Start a new session afterwards.
