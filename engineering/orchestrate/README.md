@@ -57,7 +57,7 @@ Control words, any time:
 
 ## Install
 
-Easiest: paste `Fetch and follow https://raw.githubusercontent.com/mehedibangladeshi/ai-skills/master/INSTALL.md` into your coding agent.
+Easiest: paste `Fetch and follow https://raw.githubusercontent.com/mehedibangladeshi/ai-skills/main/INSTALL.md` into your coding agent.
 
 **One skill, no clone:**
 ```bash

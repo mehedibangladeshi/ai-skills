@@ -25,7 +25,7 @@ With this skill:
 Open this pull request? (yes / draft / edit / no)
 
 Title: feat(ingest): retry source fetches on 429 with jittered backoff
-Base: master  <-  feature/ingest-retry (4 commits, 3 files, +112 -18)
+Base: main    <-  feature/ingest-retry (4 commits, 3 files, +112 -18)
 
 Body:
   ## Description
@@ -70,7 +70,7 @@ Or ask "open a PR for this branch". It only fires on an explicit request.
 
 ## Install
 
-Easiest: paste `Fetch and follow https://raw.githubusercontent.com/mehedibangladeshi/ai-skills/master/INSTALL.md` into your coding agent.
+Easiest: paste `Fetch and follow https://raw.githubusercontent.com/mehedibangladeshi/ai-skills/main/INSTALL.md` into your coding agent.
 
 **One skill, no clone:**
 ```bash
