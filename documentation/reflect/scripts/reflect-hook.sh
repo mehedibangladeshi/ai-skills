@@ -13,6 +13,11 @@ field() { printf '%s' "$input" | jq -r "$1" 2>/dev/null; }
 
 event="$(field '.hook_event_name // empty')" || exit 0
 [ -n "$event" ] || exit 0
+# Cheap check first: a non-commit Bash command exits before any git call.
+if [ "$event" = PreToolUse ]; then
+  printf '%s' "$(field '.tool_input.command // empty')" \
+    | grep -qE '(^|[;&|(] *)([A-Za-z_][A-Za-z0-9_]*=[^ ]* +)*git( +(-[cC] +("[^"]*"|[^ "]+)|--[a-z-]+(=[^ ]+)?))* +commit( |$)' || exit 0
+fi
 cwd="$(field '.cwd // empty')"
 sid="$(field '.session_id // "nosession"' | tr -c 'A-Za-z0-9_\n-' '_')"
 [ -n "$cwd" ] && git -C "$cwd" rev-parse --is-inside-work-tree >/dev/null 2>&1 || exit 0
@@ -25,8 +30,6 @@ dir="${REFLECT_HOOK_DIR:-${TMPDIR:-/tmp}}"
 
 case "$event" in
   PreToolUse)
-    printf '%s' "$(field '.tool_input.command // empty')" \
-      | grep -qE 'git( -C [^ ]+)? commit' || exit 0
     head="$(git -C "$cwd" rev-parse HEAD 2>/dev/null || echo nohead)"
     marker="$dir/reflect-hook-$sid-$head"
     [ -e "$marker" ] && exit 0

@@ -80,7 +80,9 @@ Before commit, add this to `~/.claude/settings.json`:
         "hooks": [
           {
             "type": "command",
-            "command": "~/.claude/skills/reflect/scripts/reflect-hook.sh"
+            "command": "~/.claude/skills/reflect/scripts/reflect-hook.sh",
+            "if": "Bash(git *)",
+            "timeout": 10
           }
         ]
       }
@@ -88,6 +90,8 @@ Before commit, add this to `~/.claude/settings.json`:
   }
 }
 ```
+
+The `if` filter makes Claude Code skip the script for Bash commands that aren't git. It is deliberately broad (`git *`, not `git commit:*`) so forms like `git -c key=val commit` still reach the script, which decides what counts as a commit.
 
 On stop, add this:
 
@@ -99,7 +103,8 @@ On stop, add this:
         "hooks": [
           {
             "type": "command",
-            "command": "~/.claude/skills/reflect/scripts/reflect-hook.sh"
+            "command": "~/.claude/skills/reflect/scripts/reflect-hook.sh",
+            "timeout": 10
           }
         ]
       }
