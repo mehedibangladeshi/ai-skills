@@ -62,7 +62,7 @@ Then start a new Claude Code session. See [INSTALL.md](INSTALL.md) for uninstall
 
 **A prompt can't stop itself.** orchestrate has a PREVIEW gate that ignores "just go" written into the goal. git-commit has a validator that fails the commit. The check lives outside the model's mood.
 
-**A prompt spends the same model on everything.** orchestrate keeps the planner on Opus or Sonnet and hands the building to Haiku or Sonnet sub-agents, picked by a score.
+**A prompt spends the same model on everything.** orchestrate keeps the planner on Opus or Sonnet and hands the building to Haiku, Sonnet or Opus sub-agents, picked by a score, with Opus for security work.
 
 **A prompt loses its place.** orchestrate keeps a plan file you can resume. rn-version-upgrade keeps `UPGRADE_PLAN.md`. Interrupt either and pick up where it stopped.
 

@@ -8,11 +8,11 @@ You hand a big goal to one expensive model in one long session. It guesses at sc
 
 ## What it does differently
 
-- **It never implements.** Every task goes to a `haiku` or `sonnet` sub-agent. The orchestrator plans, watches and judges. The one exception is a fix of 5 lines or fewer, once per task, for a defect found in verification.
-- **Model tier comes from a score.** Each task gets 0-2 on Ambiguity, Breadth and Reasoning. Total 0-2 goes to `haiku`, 3-4 to `sonnet`. A 5-6 gets split until every piece is 4 or less. Security and data-migration work is `sonnet` at minimum.
-- **Hard approval gate.** It shows a plan preview (tasks, tier, owned files, acceptance, verify commands) and stops. "Just go" written into your goal is ignored, and it says so. "ok, but..." counts as an edit request, not a yes.
+- **It never implements.** Every task goes to a `haiku`, `sonnet` or `opus` sub-agent. The orchestrator plans, watches and judges. The one exception is a fix of 5 lines or fewer, once per task, for a defect found in verification.
+- **Model tier comes from a score.** Each task gets 0-2 on Ambiguity, Breadth and Reasoning. Total 0-2 goes to `haiku`, 3-4 to `sonnet`. A 5-6 gets split until every piece is 4 or less. If it can't split cleanly, it runs whole on `opus`. Anything touching a security surface (auth, secrets, crypto, injection-prone code, permissions, security audits) always runs on `opus`, and you can ask for `opus` yourself. Data-migration work is `sonnet` at minimum.
+- **Hard approval gate.** It shows a plan preview (tasks, tier, owned files, acceptance, verify commands; each opus row gives its reason, and more than 2 opus tasks asks you to confirm) and stops. "Just go" written into your goal is ignored, and it says so. "ok, but..." counts as an edit request, not a yes.
 - **At most 3 live sub-agents.** Each file in a wave has exactly one owner. Contracts (shared types, names, file ownership) are fixed before anyone starts, so parallel agents don't collide.
-- **Separate verification.** A haiku verifier runs the checks and flags any path changed outside its task's owned files. A fresh sonnet reviewer reads the diffs for sonnet-tier and security-sensitive tasks.
+- **Separate verification.** A haiku verifier runs the checks and flags any path changed outside its task's owned files. A fresh sonnet reviewer reads the diffs for non-security sonnet and opus tasks. A fresh opus security reviewer hunts for vulnerabilities in security tasks.
 - **Resumable.** The plan lives in `docs/plans/YYYY-MM-DD-<slug>.md` with a Status line and a launch log. If a run is interrupted, `resume` reads that file and continues.
 - **Reuses a codebase map.** If it finds one (graphify, CodeGraph and similar), scouts query it before grepping. It never builds or refreshes one.
 
@@ -97,6 +97,6 @@ No. It stops and asks you to switch with `/model`. It never changes the model fo
 Not on its own. Commit, push, tag and publish need a request from you in that run, plus a confirmation. At CLOSE it suggests them. If `/git-commit` is installed, it uses that. It adds no AI attribution to commits or PRs.
 
 **A sub-agent fails. Then what?**
-Haiku retries once with the error and current diff, then moves to sonnet. Sonnet retries once, then the orchestrator diagnoses and re-delegates. If that also fails, it pauses and reports.
+Haiku retries once with the error and current diff, then moves to sonnet. Sonnet retries once, then the orchestrator either tries opus once or diagnoses and re-delegates (it logs which). Opus retries once, then the orchestrator diagnoses. If that also fails, it pauses and reports.
 
 [Back to all skills](../../README.md)

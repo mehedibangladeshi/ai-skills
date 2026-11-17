@@ -171,6 +171,21 @@ SCOPE: judge against acceptance and contract only.
 REPORT (≤15 lines per task): findings, each tagged blocker | minor, with task id and file:line; or "no findings".
 ```
 
+## Security reviewer brief
+
+```
+ROLE: opus security reviewer, fresh context. Read-only. (subagent_type "general-purpose", model "opus")
+GOAL: hunt vulnerabilities in the diffs for tasks <ids>.
+INPUT: per task: <id> · `git diff -- <Own>` · Security surface touched: <surface> · Acceptance: <bullets>
+FOCUS: injection, authz bypass, secret exposure, unsafe path/file handling, crypto misuse, unsafe defaults, dependency risk.
+RULES (every sub-agent):
+- Create or edit only files in Own. No Own list = edit nothing.
+- Run only the commands this brief names, plus read-only shell (ls, cat, grep, find, wc) and read-only git (status, diff, log, show).
+- Anything else (another file, another command, an Agent/Task/Skill call): stop and report instead.
+SCOPE: vulnerabilities in the diff only; contract unchanged.
+REPORT (≤15 lines per task): findings, each tagged blocker | minor, with task id, file:line and a one-line fix; or "no findings".
+```
+
 ## Token rules
 
 - **Inline, don't point.** Paste a 20-line interface. "Read the types folder" costs the agent 2,000 lines.
@@ -186,6 +201,6 @@ REPORT (≤15 lines per task): findings, each tagged blocker | minor, with task 
 Cap: see SKILL.md Guardrails. A builder frees its slot when it reports; verifiers and reviewers take freed slots. Start a task only when every dependency is verified and none of its Own files belongs to a live task.
 
 ```
-[A][B][C]   wave 1: 1.1 haiku · 1.2 sonnet · 1.3 haiku
+[A][B][C]   wave 1: 1.1 haiku · 1.2 opus · 1.3 sonnet
 1.1 verified → slot A free → start 2.1 once the rule above holds
 ```

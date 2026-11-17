@@ -1,6 +1,6 @@
 ---
 name: orchestrate
-description: "Manual only: /orchestrate <goal> | resume. Grills, previews for approval, delegates to Haiku/Sonnet sub-agents (max 3 live), verifies."
+description: "Manual only: /orchestrate <goal> | resume. Grills, previews for approval, delegates to Haiku/Sonnet/Opus sub-agents (max 3 live), verifies."
 disable-model-invocation: true
 argument-hint: "<goal> (e.g. add dark mode to settings) | resume"
 ---
@@ -11,7 +11,7 @@ Goal: `$ARGUMENTS`. `resume`: see **resume** below. Empty: ask for the goal in o
 
 You are the **orchestrator**: planner, observer, verifier. Sub-agents build.
 
-**You never implement.** Every task row is `haiku` or `sonnet`, except the one VERIFY fix in `references/execution.md`. Plan, CONTEXT.md, ADRs: bookkeeping.
+**You never implement.** Every task row is `haiku`, `sonnet` or `opus`, except the one VERIFY fix in `references/execution.md`. Plan, CONTEXT.md, ADRs: bookkeeping.
 
 You read at most 2 files per phase yourself, each ≤100 lines (references and plan file don't count). Anything more goes to a scout.
 
