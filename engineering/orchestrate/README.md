@@ -79,6 +79,31 @@ Start a new Claude Code session to load it.
 - Run it on an Opus or Sonnet model (switch with `/model`). On Haiku it says so and stops until you switch or tell it to continue.
 - A git repo is best. Without one it asks whether to `git init` with a baseline commit, or falls back to copying owned files to a scratchpad and diffing.
 
+## Codex lane (optional)
+
+Have an OpenAI Codex subscription too? Add `--codex` to the goal and OpenAI's Codex CLI shares the building with Claude, so neither subscription's 5-hour or weekly limit runs out first.
+
+```
+/orchestrate --codex add dark mode to settings
+```
+
+- **Tier stays, executor is new.** The preview gains an Executor column (`claude` or `codex`). Codex tasks get the newest model of a family matched to the tier: haiku → luna (low effort), sonnet → sol (medium), opus → astra (high).
+- **Codex builds, Claude guards.** Builders and the sonnet-level reviewer default to Codex. Scouts, verifiers, the fast lane, security tasks and their opus review always stay on Claude.
+- **Budget-aware.** Before each wave, `scripts/lane.py budget` reads both sides' usage. A side at 80% of its 5-hour window, or more than 10 points ahead of the week, hands the next wave to the other side. If both are tight, the run pauses and tells you when the limits reset.
+- **Fails safe.** Codex missing, too old, logged out or rate-limited: the lane switches off and its tasks run on Claude at the same tier.
+- **Off by default.** Without `--codex` nothing changes, and Codex is never mentioned or run.
+
+Needs the Codex CLI (`codex exec` with `--json`, `-o`, `-s`), logged in, and `python3`. Codex usage is read from `~/.codex/sessions`. To let it see your Claude usage too, have your status line script save its `rate_limits` to `~/.claude/usage.json`. In a Node status line, after parsing stdin into `input`:
+
+```js
+const rl = input.rate_limits;
+if (rl?.five_hour && rl?.seven_day) require('fs').writeFileSync(
+  require('path').join(require('os').homedir(), '.claude', 'usage.json'),
+  JSON.stringify({ five_hour: rl.five_hour, seven_day: rl.seven_day }));
+```
+
+Without it, the Claude side shows as unknown and routing uses Codex's numbers only.
+
 ## FAQ
 
 **Does this cost more than just prompting?**
