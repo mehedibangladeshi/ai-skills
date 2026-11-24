@@ -81,9 +81,9 @@ def route(claude, codex):
 def fmt(name, s):
     if not s:
         return f"{name}: unknown"
-    t = lambda e: time.strftime("%a %H:%M", time.localtime(e)) if e else "?"
-    return (f"{name}: 5h {s['5h']:.0f}% (resets {t(s['resets_5h'])}) · week {s['wk']:.0f}% "
-            f"vs {s['wk_elapsed']:.0f}% elapsed (resets {t(s['resets_wk'])}) · {'TIGHT' if s['tight'] else 'ok'}")
+    t = lambda e: f"resets {time.strftime('%a %H:%M', time.localtime(e))}" if e and e > time.time() else "window reset"
+    return (f"{name}: 5h {s['5h']:.0f}% ({t(s['resets_5h'])}) · week {s['wk']:.0f}% "
+            f"vs {s['wk_elapsed']:.0f}% elapsed ({t(s['resets_wk'])}) · {'TIGHT' if s['tight'] else 'ok'}")
 
 
 def budget(now=None):
