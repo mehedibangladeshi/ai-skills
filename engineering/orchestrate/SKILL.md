@@ -2,7 +2,7 @@
 name: orchestrate
 description: "Manual only: /orchestrate <goal> | resume. Grills, previews for approval, delegates to Haiku/Sonnet/Opus sub-agents (max 3 live), verifies."
 disable-model-invocation: true
-argument-hint: "<goal> (e.g. add dark mode to settings) | resume"
+argument-hint: "<goal> (e.g. add dark mode to settings) [--codex] | resume"
 ---
 
 # Orchestrate
@@ -24,6 +24,8 @@ GRILL ─► PLAN ─► PREVIEW ─► EXECUTE/VERIFY ─► CLOSE
 Run phases in order; track them in the plan's Status line.
 
 **Model check first.** If the "You are powered by" line names a Haiku model, say the orchestrator needs Opus or Sonnet (switch with `/model`), then STOP until the user switches or says continue. Never change models yourself.
+
+**Codex lane (optional).** Only if the goal contains `--codex` or asks for Codex: read `references/codex.md` and follow it for availability, executors, budget and codex launches. Otherwise ignore Codex entirely.
 
 ## 1 · GRILL
 

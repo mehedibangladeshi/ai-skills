@@ -7,6 +7,7 @@
 ```markdown
 # Plan: <title>
 Status: Grilling | Awaiting approval | Executing (wave N) | Verifying (wave N) | Complete | Paused | Rejected
+Codex lane: on | off (<reason>)   — only when the Codex lane was requested (references/codex.md)
 ## Goal / Done when / Non-goals
 ## Open questions   — design tree, ticked off during grilling
 ## Contracts        — interfaces, types, file ownership
@@ -54,6 +55,7 @@ Every opus row's Tier cell carries its reason: `opus (security: <surface>)`, `op
 **Verify with:** <test / lint / typecheck / build commands>
 **Risks:** <top 1–3 + mitigation>
 **Mix:** <x> haiku · <y> sonnet · <z> opus · <n> waves (x + y + z must equal the task count)
+**Codex lane:** <only if requested: an Executor column after Tier, `· <n> codex` on Mix, and the `lane.py budget` lines; or `Codex lane unavailable: <reason>`>
 **Opus:** <only if more than 2 opus tasks: ask the user to confirm opus specifically>
 **Model:** <only if security tasks are present and the orchestrator runs on Sonnet: suggest `/model` Opus; never switch models yourself>
 
