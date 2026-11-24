@@ -52,7 +52,7 @@ Light visual task: `... lane.py model codex light --visual)`.
 - Never `--dangerously-bypass-approvals-and-sandbox`, never `danger-full-access`.
 - The codex sandbox has no network: tasks needing network (installs, `gh`, fetches) require an eligible claude worker. Pause and report if the assigned role cannot run there.
 
-**Codex host, claude worker.** Background shell; `cd` into the repo first (no `--cwd`; extra dirs via `--add-dir`). Builder example:
+**Codex host, claude worker.** Background shell; `cd` into the repo first (no `--cwd`; extra dirs via `--add-dir`). `claude -p` needs network; without network access in a Codex sandbox, count claude as unavailable, drop it, and show `claude unavailable: no network in Codex sandbox` in the preview. Enable it by allowing network for the sandbox (`sandbox_workspace_write.network_access = true`) or approving the escalation. Builder example:
 
 ```
 claude -p $(python3 -I <skill dir>/scripts/lane.py model claude standard) --output-format json --permission-mode acceptEdits --allowedTools "Read,Edit,Write,Glob,Grep,Bash" < <scratch>/<task>.brief > <scratch>/<task>.json
