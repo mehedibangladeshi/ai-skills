@@ -29,6 +29,6 @@ The session is done when the frontier is empty: every branch of the design tree 
 <!-- orchestrate additions -->
 
 - The design tree lives in the plan file's `## Open questions`; tick items as settled.
-- Fact-finding sub-agents use the Scout brief in references/delegation.md (fresh context, haiku/Explore; sonnet if cross-module).
+- Fact-finding uses a fresh light scout (standard if cross-module) with the Scout brief in `references/delegation.md`. Launch per `references/providers.md` `## Launching`.
 - Delivering a round: Claude Code → AskUserQuestion when the round has ≤4 questions, else numbered plain text; Codex → request_user_input in Plan mode when the round has ≤3 questions, else numbered plain text ending the turn; other harnesses → plain text.
-- Exit: when the frontier is empty, post the lock per SKILL.md Phase 1 Exit and WAIT (zero questions asked: the lock goes atop the preview instead).
+- Exit: when the frontier is empty, post the lock per SKILL.md Phase 1 Exit and WAIT. If zero questions were asked, draft the lock before PLAN and show it atop the preview.
