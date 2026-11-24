@@ -45,8 +45,10 @@ Nothing is built until you reply. (Illustrative. Your tasks will differ.)
 Manual only. The model never invokes it on its own.
 
 ```
-/orchestrate <goal> [--claude|--codex] [--single-provider]
+/orchestrate <goal> [--claude|--codex] [--single-provider]    # Claude Code
 /orchestrate resume
+$orchestrate <goal> [--claude|--codex] [--single-provider]    # Codex
+$orchestrate resume
 ```
 
 Phases run in order: GRILL, PLAN, PREVIEW, EXECUTE/VERIFY, CLOSE. Trivial goals (2 tasks or fewer, all low score, no security work, no new domain terms) take a fast lane and skip the grilling.
@@ -76,9 +78,25 @@ mkdir -p ~/.claude/skills && ln -s "$(pwd)/ai-skills/engineering/orchestrate" ~/
 
 Start a new Claude Code session to load it.
 
+**Codex, one skill, no clone:**
+```bash
+mkdir -p ~/.agents/skills/orchestrate
+curl -fsSL -o /tmp/orchestrate.skill https://github.com/mehedibangladeshi/ai-skills/releases/latest/download/orchestrate.skill
+unzip -o /tmp/orchestrate.skill -d ~/.agents/skills/orchestrate
+```
+
+**Codex, or clone + symlink** (update with `git pull`):
+```bash
+git clone https://github.com/mehedibangladeshi/ai-skills.git
+mkdir -p ~/.agents/skills && ln -s "$(pwd)/ai-skills/engineering/orchestrate" ~/.agents/skills/orchestrate
+```
+
+Start a new Codex session and invoke `$orchestrate <goal>`.
+
 ## Requirements
 
 - Run it on a standard or deep host model. With a light model, it asks you to switch and stops.
+- In Codex, run it on Sol or Astra. If you're on Luna or Terra, switch to Sol or Astra first.
 - Use `python3` and an available way to delegate. The host can use native sub-agents for its provider. CLI workers need the corresponding CLI installed and authenticated. Codex CLI workers require `codex exec` with `--json`, `--output-last-message` and `--sandbox` support.
 - A git repo is best. Without one it asks whether to `git init` with a baseline commit, or falls back to copying owned files to a scratchpad and diffing.
 

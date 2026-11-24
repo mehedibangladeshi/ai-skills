@@ -8,6 +8,7 @@ How the orchestrator runs on Claude Code or Codex and uses both providers' worke
 
 Run `lane.py host` once at start (and on `resume`): `CODEX_THREAD_ID` set → `codex`; else `CLAUDE_CODE_ENTRYPOINT` or `CLAUDECODE` set → `claude`; else `other`. Codex is checked first because nested processes inherit the parent's vars.
 
+- Codex reads only `name` and `description` from `SKILL.md` frontmatter. The policy in `agents/openai.yaml` sets `allow_implicit_invocation: false`. Invoke explicitly with `$orchestrate <goal>` or select it from `/skills`.
 - Orchestrator = the host model. A light-tier host (see `## Model map`) → ask the user to switch to a standard or deep model, then STOP.
 - The host's own provider is always available natively. At GRILL start and on resume, use `lane.py available` for the other provider's CLI. If the host lacks native sub-agents, check the CLIs for all workers. Drop any provider that needs a CLI reported as unavailable.
 - `other` host: no native sub-agents, see `## No sub-agents`. The available CLIs are the providers.
@@ -30,11 +31,14 @@ Run `lane.py host` once at start (and on `resume`): `CODEX_THREAD_ID` set → `c
 
 Use both eligible providers by default. Same provider as host → native sub-agent. Other provider → CLI in the background. Write the brief (`delegation.md` template, Shared allowlist included) to `<scratch>/<task>.brief`.
 
-Always inline the flags as `$(python3 -I <skill dir>/scripts/lane.py model <provider> <tier> [--visual])`. Never store them in a variable first (zsh does not word-split unquoted variables). Codex light visual tasks add `--visual`.
+For CLI workers, always inline the flags as `$(python3 -I <skill dir>/scripts/lane.py model <provider> <tier> [--visual])`. Never store them in a variable first (zsh does not word-split unquoted variables). Codex light visual tasks add `--visual`.
 
 **Claude host, claude worker.** Agent tool, `model` from `lane.py model claude <tier>`. `subagent_type` `Explore` for scouts, `general-purpose` for everything else. Up to N Agent calls in one message run in parallel; results arrive as notifications.
 
-**Codex host, codex worker.** Call `spawn_agent` with `fork_turns: "none"` for fresh context. Pass the slug as `model` and effort as `reasoning_effort` from `lane.py model codex <tier> [--visual]`. If only effort resolves, omit `model`. Use `wait_agent` for results.
+**Codex host, codex worker.** Resolve the model slug and effort with `lane.py model codex <tier> [--visual]`. Call `spawn_agent` with a `task_name` containing only lowercase letters, digits and underscores (for example `task_1_2`), the full brief as `message`, and `fork_turns: "none"` for fresh context. Pass the slug as `model` and the effort as `reasoning_effort`. If only effort resolves, omit `model`.
+
+- Log the returned agent ID with the task. Use `wait_agent` for completion updates and collect each agent's final REPORT from its completion notification. If the wait times out before all expected reports arrive, wait again while agents are live. Use `list_agents` to check their status if needed.
+- The current run's slot cap is the maximum live agent count across native and CLI workers (see `## Slots`). If Codex offers fewer native slots, respect that limit too. Wait for a slot before launching another worker.
 
 **Claude host, codex worker.** Bash with `run_in_background: true`. Builder example:
 
