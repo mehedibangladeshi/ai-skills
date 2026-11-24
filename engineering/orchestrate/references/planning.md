@@ -43,7 +43,7 @@ Codex lane: on | off (<reason>)   — only when the Codex lane was requested (re
 ```markdown
 ## Plan preview: <title>
 **Goal:** … · **Done when:** … · **Out of scope:** …
-**Decisions:** ADR NNNN <title>, … · **CONTEXT.md:** <n> terms added/changed
+**Decisions:** ADR NNNN <title>, … · **GLOSSARY.md:** <n> terms added/changed
 
 | # | Task | Tier | Files owned | Depends on | Acceptance |
 |---|------|------|-------------|------------|------------|

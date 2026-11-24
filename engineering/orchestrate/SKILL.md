@@ -11,7 +11,7 @@ Goal: `$ARGUMENTS`. `resume`: see **resume** below. Empty: ask for the goal in o
 
 You are the **orchestrator**: planner, observer, verifier. Sub-agents build.
 
-**You never implement.** Every task row is `haiku`, `sonnet` or `opus`, except the one VERIFY fix in `references/execution.md`. Plan, CONTEXT.md, ADRs: bookkeeping.
+**You never implement.** Every task row is `haiku`, `sonnet` or `opus`, except the one VERIFY fix in `references/execution.md`. Plan, GLOSSARY.md, ADRs: bookkeeping.
 
 You read at most 2 files per phase yourself, each ≤100 lines (references and plan file don't count). Anything more goes to a scout.
 
@@ -31,9 +31,9 @@ Run phases in order; track them in the plan's Status line.
 
 1. Create the plan file `docs/plans/YYYY-MM-DD-<slug>.md` from the template in `references/planning.md`, Status `Grilling`. Re-read it after compaction.
 2. Before the first question: detect a codebase map once per `references/codebase-map.md` and log its `Map:` line (skip if the fast lane applies). Draft a rough task split with per-axis scores into it. **Fast lane** only if: ≤2 tasks · every task totals ≤2 AND scores Ambiguity 0 · no security work · no new domain terms. Then skip grill and lock. The plan file stays a stub (Goal, Waves, Log). From delegation.md read only `## Fast-lane prompt` and `## Verifier brief`. After PLAN, re-check; if it fails, use the full flow.
-3. Read `references/grill-with-docs.md` and follow it. AskUserQuestion (recommended first) or plain text; one question per call. "Other" text goes to `## Open questions`.
+3. Read `references/grilling.md` and `references/domain-modeling.md` and follow them. Questions go out in rounds (whole frontier, numbered, recommended answer each). "Other" text goes to `## Open questions`.
 4. Broad exploration: scout (`## Scout brief`, `Explore`, haiku; sonnet if cross-module), with the `MAP:` line from step 2 in every brief.
-5. Persist the design tree in `## Open questions`. Domain terms → `CONTEXT.md`; minor decisions → plan file.
+5. Persist the design tree in `## Open questions`. Domain terms → `GLOSSARY.md` (legacy `CONTEXT.md` per references/domain-modeling.md); minor decisions → plan file.
 6. **Exit** when every branch is resolved or deferred: post the lock (goal, scope, non-goals, done criteria, docs touched), then WAIT for confirmation (same words as the Phase 3 gate). Zero questions asked: skip the separate lock; put it atop the preview.
 
 ## 2 · PLAN
@@ -51,7 +51,7 @@ Show `references/planning.md` `## Preview template`, then STOP and WAIT. Fast la
 **Control words**:
 - **stop** / **pause**: launch nothing new, let live agents finish and log, Status `Paused`, report done and pending.
 - **resume** (or goal `resume`): re-read the newest plan in `docs/plans/` not `Complete` or `Rejected`; continue from Status and Log. Launched task with no logged result: inspect `git diff -- <Own>`; treat as failed attempt. Approval stands unless scope changed.
-- **reject**: Status `Rejected`, list CONTEXT.md/ADR edits made this run, ask keep or revert, stop.
+- **reject**: Status `Rejected`, list glossary (GLOSSARY.md or legacy CONTEXT.md)/ADR edits made this run, ask keep or revert, stop.
 
 | Thought | Reality |
 |---|---|
@@ -68,7 +68,7 @@ Read `references/execution.md` and follow it.
 
 ## 6 · CLOSE
 
-- Changed domain term or overturned decision: update `CONTEXT.md` or supersede the ADR.
+- Changed domain term or overturned decision: update `GLOSSARY.md` (legacy `CONTEXT.md` per references/domain-modeling.md) or supersede the ADR.
 - Plan `Complete`, with actual tier mix and escalations.
 - Report: built, verified, deviations, follow-ups, docs.
 - No map and heavy exploration: optionally suggest a code map (`references/codebase-map.md`).
