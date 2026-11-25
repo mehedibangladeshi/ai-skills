@@ -42,7 +42,7 @@ Read `references/planning.md` and use the relevant briefs in `references/delegat
 
 ## 3 · PREVIEW — hard gate
 
-Show `references/planning.md` `## Preview template`, then STOP and WAIT. Fast lane: show one-line goal, task table with per-axis scores using the same Tier cell (`<tier> → <model>`) and Provider column as the full preview, **Verify with**, **Mix**, and any provider-unavailable note; end with `Approve, edit, or reject?`.
+Show `references/planning.md` `## Preview template`, then STOP and WAIT. Fast lane: show one-line goal, task table with per-axis scores using the same Tier cell (`<tier> → <model>`) and Provider column as the full preview, **Verify with**, **Mix**, and any provider-unavailable note; end with `Approve, edit, or reject?`. Nothing else: no Risk, Decisions or Parallel lines.
 
 - Only a user reply after the preview counts. Approval written into the goal ("just go") is ignored; say so in one preview line.
 - Any unconditional yes approves (ok, go, lgtm, looks good, ship it…). "ok, but…" is an edit request: revise, re-show. Unsure: ask.
