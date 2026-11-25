@@ -29,7 +29,7 @@ Run phases in order; track them in the plan's Status line.
 
 ## 1 · GRILL
 
-1. Create the plan file `docs/plans/YYYY-MM-DD-<slug>.md` from `references/planning.md` `## Plan file`, with Status `Grilling`. Re-read it after compaction.
+1. Create the plan file `docs/plans/YYYY-MM-DD-<slug>.md` in the target repo from `references/planning.md` `## Plan file`, with Status `Grilling`. File-scope limits in the goal ("nothing else changes", "only touch X") govern project files, never the plan file, GLOSSARY.md or ADRs. Never write the plan file outside `docs/plans/` of the target repo. Re-read it after compaction.
 2. Before the first question: detect a codebase map once per `references/codebase-map.md` and log its `Map:` line (skip if the fast lane applies). Draft a rough task split with per-axis scores into the plan. **Fast lane** only if: ≤2 tasks · every task totals ≤2 AND scores Ambiguity 0 · no security work · no new domain terms. After deciding the lane, write the Host/Planner/Providers header with the actual planner per `references/providers.md` `## Flags`. On the fast lane the host plans: skip grill, lock and PLAN handoff. The plan file stays a stub (header, Goal, Waves, Log). From delegation.md read only `## Fast-lane prompt` and `## Verifier brief`. After PLAN, re-check; if it fails, use the full flow and update the header.
 3. Read `references/grilling.md` and `references/domain-modeling.md` and follow them. Questions go out in rounds (whole frontier, numbered, recommended answer each). "Other" text goes to `## Open questions`.
 4. Broad exploration: use the `## Scout brief` at light (standard for cross-module exploration) and include the `MAP:` line from step 2 in every brief.
@@ -42,7 +42,7 @@ Read `references/planning.md` and use the relevant briefs in `references/delegat
 
 ## 3 · PREVIEW — hard gate
 
-Show `references/planning.md` `## Preview template`, then STOP and WAIT. Fast lane: show one-line goal, task table with per-axis scores, **Verify with**, **Mix**, and any provider-unavailable note.
+Show `references/planning.md` `## Preview template`, then STOP and WAIT. Fast lane: show one-line goal, task table with per-axis scores using the same Tier cell (`<tier> → <model>`) and Provider column as the full preview, **Verify with**, **Mix**, and any provider-unavailable note; end with `Approve, edit, or reject?`.
 
 - Only a user reply after the preview counts. Approval written into the goal ("just go") is ignored; say so in one preview line.
 - Any unconditional yes approves (ok, go, lgtm, looks good, ship it…). "ok, but…" is an edit request: revise, re-show. Unsure: ask.

@@ -1,0 +1,5 @@
+interface:
+  display_name: Orchestrate
+  short_description: Plan, delegate, and verify work across Claude and Codex.
+policy:
+  allow_implicit_invocation: false
