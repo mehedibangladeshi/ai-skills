@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
-"""Codex lane helper for /orchestrate. Stdlib only.
+"""Provider-neutral lane helper for /orchestrate. Stdlib only.
 
-  lane.py budget        -> one line per side + a route line
-  lane.py model <tier>  -> codex flags for a tier (haiku|sonnet|opus)
+  lane.py host
+  lane.py available
+  lane.py model <claude|codex> <light|standard|deep> [--visual]
+  lane.py budget [--only claude|codex]
   lane.py --self-test
 """
-import json, sys, time
+import json, os, re, shutil, subprocess, sys, time
 from pathlib import Path
 
 HOME = Path.home()
@@ -15,7 +17,34 @@ CODEX_MODELS = HOME / ".codex" / "models_cache.json"
 
 FIVE_H_MAX = 80     # tight when 5h window used% >= this
 WEEK_SLACK = 10     # tight when weekly used% > elapsed-week% + this
-TIERS = {"haiku": ("luna", "low"), "sonnet": ("sol", "medium"), "opus": ("astra", "high")}
+TIERS = {
+    "light": ("haiku", "luna", "low"),
+    "standard": ("sonnet", "sol", "medium"),
+    "deep": ("opus", "astra", "high"),
+}
+CODEX_VISUAL_FAMILIES = {"light": "terra"}
+PROVIDERS = ("claude", "codex")
+
+
+def host(env):
+    if "CODEX_THREAD_ID" in env:
+        return "codex"
+    if "CLAUDE_CODE_ENTRYPOINT" in env or "CLAUDECODE" in env:
+        return "claude"
+    return "other"
+
+
+def available(which=shutil.which, run=subprocess.run):
+    claude = bool(which("claude"))
+    codex = which("codex")
+    if not codex:
+        return claude, False
+    try:
+        help_text = run([codex, "exec", "--help"], capture_output=True, text=True, check=True).stdout
+    except (OSError, subprocess.CalledProcessError):
+        return claude, False
+    flags = set(re.findall(r"(?<![\w-])--[\w-]+", help_text))
+    return claude, {"--json", "--output-last-message", "--sandbox"} <= flags
 
 
 def window(used, resets_at, minutes, now):
@@ -67,7 +96,10 @@ def read_codex(root=CODEX_SESSIONS):
     return None, None
 
 
-def route(claude, codex):
+def route(claude, codex, only=None):
+    if only:
+        selected = claude if only == "claude" else codex
+        return "pause" if selected and selected["tight"] else "default"
     known = [s for s in (claude, codex) if s]
     if not known or not any(s["tight"] for s in known):
         return "default"
@@ -86,21 +118,33 @@ def fmt(name, s):
             f"vs {s['wk_elapsed']:.0f}% elapsed ({t(s['resets_wk'])}) · {'TIGHT' if s['tight'] else 'ok'}")
 
 
-def budget(now=None):
+def budget(now=None, only=None):
     now = now or time.time()
-    c, x = side(*read_claude(), now), side(*read_codex(), now)
-    return [fmt("claude", c), fmt("codex", x), f"route: {route(c, x)}"]
+    readers = {"claude": read_claude, "codex": read_codex}
+    sides = {p: side(*readers[p](), now) for p in ((only,) if only else PROVIDERS)}
+    return [*(fmt(p, s) for p, s in sides.items()),
+            f"route: {route(sides.get('claude'), sides.get('codex'), only)}"]
 
 
-def model(tier, path=CODEX_MODELS):
-    family, effort = TIERS[tier]
+def model(provider, tier, *, visual=False, path=CODEX_MODELS):
+    claude_model, family, effort = TIERS[tier]
+    if provider == "claude":
+        return f"--model {claude_model}"
+    if visual:
+        family = CODEX_VISUAL_FAMILIES.get(tier, family)
     flags = f"-c model_reasoning_effort={effort}"
     try:
         models = json.loads(path.read_text())
         models = models.get("models", models) if isinstance(models, dict) else models
-        # ponytail: family = substring of slug (luna/sol/astra); update TIERS if OpenAI renames families
-        hits = [m for m in models if m.get("visibility") == "list" and family in m.get("slug", "")]
-        best = min(hits, key=lambda m: m.get("priority", 999))
+        hits = [m for m in models if m.get("visibility") == "list" and family in m.get("slug", "").split("-")]
+
+        def newest(m):
+            # shortcut: infer release order from GPT slug versions, use release metadata if the cache adds it
+            version = re.match(r"gpt-(\d+(?:\.\d+)*)-", m["slug"])
+            numbers = tuple(map(int, version[1].split("."))) if version else ()
+            return numbers, -m.get("priority", 999)
+
+        best = max(hits, key=newest)
         return f"-m {best['slug']} {flags}"
     except Exception:
         return flags  # family not found: user's default model
@@ -108,6 +152,25 @@ def model(tier, path=CODEX_MODELS):
 
 def self_test():
     import tempfile
+    from unittest.mock import patch
+
+    assert host({"CODEX_THREAD_ID": "1"}) == "codex"
+    assert host({"CLAUDE_CODE_ENTRYPOINT": "cli"}) == "claude"
+    assert host({"CODEX_THREAD_ID": "1", "CLAUDE_CODE_ENTRYPOINT": "cli"}) == "codex"
+    assert host({"CLAUDECODE": "1"}) == "claude"
+    assert host({}) == "other"
+
+    def help_output(command, **kwargs):
+        assert command == ["/bin/codex", "exec", "--help"]
+        return subprocess.CompletedProcess(command, 0, stdout="--json --output-last-message --sandbox")
+
+    def incomplete_help(command, **kwargs):
+        return subprocess.CompletedProcess(command, 0, stdout="--json --output-last-message --sandbox-mode")
+
+    assert available(lambda name: f"/bin/{name}", help_output) == (True, True)
+    assert available(lambda name: None, help_output) == (False, False)
+    assert available(lambda name: f"/bin/{name}", incomplete_help) == (True, False)
+
     now = 1_000_000_000
     # side/route
     ok = side((10, now + 3600), (20, now + 3 * 86400), now)
@@ -121,6 +184,18 @@ def self_test():
     tight = side((90, now + 60), (0, now + 86400), now)
     assert route(ok, tight) == "claude" and route(tight, ok) == "codex"
     assert route(tight, tight) == "pause" and route(None, tight) == "claude"
+    with patch(f"{__name__}.read_claude", return_value=((10, now + 60), (0, now + 86400))) as claude:
+        with patch(f"{__name__}.read_codex", return_value=((90, now + 60), (0, now + 86400))) as codex:
+            claude_budget = budget(now, only="claude")
+            codex.assert_not_called()
+            assert len(claude_budget) == 2 and claude_budget[0].startswith("claude: 5h ")
+            assert claude_budget[0].endswith(" · ok") and claude_budget[1] == "route: default"
+            claude.reset_mock()
+            codex_budget = budget(now, only="codex")
+            claude.assert_not_called()
+            assert len(codex_budget) == 2 and codex_budget[0].startswith("codex: 5h ")
+            assert codex_budget[0].endswith(" · TIGHT") and codex_budget[1] == "route: pause"
+    assert route(None, None, "codex") == "default"
     with tempfile.TemporaryDirectory() as d:
         d = Path(d)
         # codex session parsing
@@ -136,15 +211,24 @@ def self_test():
                                               "seven_day": {"used_percentage": 6, "resets_at": 2}}))
         assert read_claude(d / "u.json") == ((5, 1), (6, 2))
         assert read_claude(d / "nope.json") == (None, None)
-        # model pick: highest priority (lowest number) listed slug of the family
+        # Pick the newest visible model even when an older model has higher priority.
         (d / "m.json").write_text(json.dumps({"models": [
-            {"slug": "gpt-6.1-sol", "visibility": "list", "priority": 5},
-            {"slug": "gpt-6.2-sol", "visibility": "list", "priority": 1},
+            {"slug": "gpt-6.1-sol", "visibility": "list", "priority": 1},
+            {"slug": "gpt-6.2-sol", "visibility": "list", "priority": 5},
             {"slug": "gpt-9-sol", "visibility": "hide", "priority": 0},
-            {"slug": "gpt-6-luna", "visibility": "list", "priority": 8}]}))
-        assert model("sonnet", d / "m.json") == "-m gpt-6.2-sol -c model_reasoning_effort=medium"
-        assert model("haiku", d / "m.json") == "-m gpt-6-luna -c model_reasoning_effort=low"
-        assert model("opus", d / "m.json") == "-c model_reasoning_effort=high"  # no astra -> default model
+            {"slug": "gpt-6-luna", "visibility": "list", "priority": 8},
+            {"slug": "gpt-6.1-terra", "visibility": "list", "priority": 8},
+            {"slug": "gpt-6.2-astra", "visibility": "list", "priority": 8}]}))
+        cache = d / "m.json"
+        assert {tier: model("claude", tier) for tier in TIERS} == {
+            "light": "--model haiku", "standard": "--model sonnet", "deep": "--model opus",
+        }
+        assert model("codex", "light", path=cache) == "-m gpt-6-luna -c model_reasoning_effort=low"
+        assert model("codex", "standard", path=cache) == "-m gpt-6.2-sol -c model_reasoning_effort=medium"
+        assert model("codex", "deep", path=cache) == "-m gpt-6.2-astra -c model_reasoning_effort=high"
+        assert model("codex", "light", visual=True, path=cache) == "-m gpt-6.1-terra -c model_reasoning_effort=low"
+        cache.write_text('{"models": []}')
+        assert model("codex", "deep", path=cache) == "-c model_reasoning_effort=high"
     print("self-test ok")
 
 
@@ -152,9 +236,17 @@ if __name__ == "__main__":
     a = sys.argv[1:]
     if a == ["--self-test"]:
         self_test()
+    elif a == ["host"]:
+        print(host(os.environ))
+    elif a == ["available"]:
+        for provider, present in zip(PROVIDERS, available()):
+            print(f"{provider}: {'yes' if present else 'no'}")
     elif a == ["budget"]:
         print("\n".join(budget()))
-    elif len(a) == 2 and a[0] == "model" and a[1] in TIERS:
-        print(model(a[1]))
+    elif len(a) == 3 and a[:2] == ["budget", "--only"] and a[2] in PROVIDERS:
+        print("\n".join(budget(only=a[2])))
+    elif (a[:1] == ["model"] and len(a) >= 3 and a[1] in PROVIDERS
+          and a[2] in TIERS and a[3:] in ([], ["--visual"])):
+        print(model(a[1], a[2], visual=len(a) == 4))
     else:
         sys.exit(__doc__)
