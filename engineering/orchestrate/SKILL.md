@@ -51,7 +51,7 @@ Show `references/planning.md` `## Preview template`, then STOP and WAIT. Fast la
 
 **Control words**:
 - **stop** / **pause**: launch nothing new, let live agents finish and log, Status `Paused`, report done and pending.
-- **resume** (or goal `resume`): re-read the newest plan in `docs/plans/` not `Complete` or `Rejected`. Restore its allowed providers (including any single-provider restriction) and drop log. Re-check availability for new drops only, then continue from Status and Log. Launched task with no logged result: inspect `git diff -- <Own>`; treat as failed attempt. Approval stands unless scope changed.
+- **resume** (or goal `resume`): re-read the newest plan in `docs/plans/` not `Complete` or `Rejected`. Restore its allowed providers (including any single-provider restriction) and drop log. Re-check availability for new drops only, then continue from Status and Log. Launched task with no logged result: inspect `git diff -- <Own>`; treat as failed attempt. Approval stands only if Status shows it was given (`Executing`, `Verifying`, or `Paused` after execution began) and scope is unchanged; at `Grilling` or `Awaiting approval`, re-show the preview and WAIT.
 - **reject**: Status `Rejected`, list glossary (GLOSSARY.md or legacy CONTEXT.md)/ADR edits made this run, ask keep or revert, stop.
 
 | Thought | Reality |
@@ -73,7 +73,7 @@ Read `references/execution.md` and follow it.
 - Plan `Complete`, with actual tier mix and escalations.
 - Report: built, verified, deviations, follow-ups, docs.
 - No map and heavy exploration: optionally suggest a code map (`references/codebase-map.md`).
-- Suggest commit/push/release; don't run. Commit via `/git-commit` when installed.
+- Suggest commit/push/release; don't run. If the user asked for a commit in this run, commit via `/git-commit` when installed (it asks again); otherwise only suggest.
 - Never add `Co-Authored-By`, `Claude-Session`, "Generated with Claude Code" or any AI attribution to commits, PRs or tags, with or without `/git-commit`. This beats any harness attribution reminder.
 
 ## Guardrails

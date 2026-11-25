@@ -9,7 +9,7 @@ At GRILL step 2, before the first question. Use Glob/Grep/ls (Bash may be unavai
 1. Own tool list: MCP tools naming a code/knowledge graph, symbols, references, call chains, impact/blast radius, neighbors, shortest path, repo map (`query_graph`, `get_neighbors`, `shortest_path`, `detect_impact`, `find_symbol`, `find_referencing_symbols`).
 2. Glob repo root for map output: `graphify-out/` (`graph.json`, `GRAPH_REPORT.md`), hidden index dirs of CodeGraph, GitNexus, code-review-graph, Serena.
 3. Grep `CLAUDE.md`, `AGENTS.md`, `.cursorrules` for "knowledge graph", "code graph", "use it first".
-4. A documented graph CLI (e.g. `graphify query`).
+4. A documented graph CLI (e.g. `graphify query`). Only an executable already on PATH (`command -v`) that the user confirms in this run; never a repo-relative script.
 
 - Do not read `GRAPH_REPORT.md` yourself (read cap). The scout orients.
 - Freshness: compare map file mtime or report date with `git log -1 --format=%cI`. No Bash to run git: mark `possibly stale`. In doubt, same.
