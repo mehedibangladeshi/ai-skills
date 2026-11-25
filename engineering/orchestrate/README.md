@@ -26,7 +26,7 @@ With this skill:
 /orchestrate add dark mode to settings
 ```
 
-It asks scoping questions, one at a time, with a recommended answer each. It posts a locked scope and waits. Then the preview, roughly:
+It asks scoping questions, in rounds (the whole frontier, numbered), with a recommended answer each. It posts a locked scope and waits. Then the preview, roughly:
 
 ```
 | # | Task                       | Tier   | Files owned          | Depends on |
@@ -53,7 +53,7 @@ Control words, any time:
 
 - `stop` or `pause`: launches nothing new, lets live agents finish, sets Status `Paused`.
 - `resume`: picks up the newest plan in `docs/plans/` that isn't `Complete` or `Rejected`.
-- `reject`: sets Status `Rejected`, lists the CONTEXT.md and ADR edits it made, asks whether to keep or revert them.
+- `reject`: sets Status `Rejected`, lists the GLOSSARY.md and ADR edits it made, asks whether to keep or revert them.
 
 ## Install
 
