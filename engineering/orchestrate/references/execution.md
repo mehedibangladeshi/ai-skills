@@ -3,7 +3,7 @@
 ## 4 · EXECUTE
 
 - **Git check first.**
-  - Not a git repo: ask whether to `git init` + make a baseline commit. This question is the one allowed commit prompt; a yes counts as the commit request for that baseline commit only. No AI attribution in its message (SKILL.md CLOSE). If declined: before each wave copy the owned files to the scratchpad and compare after with `diff -ru`; builders list changed files in their report.
+  - Not a git repo: ask whether to `git init` + make a baseline commit. Before committing, show `git status --short`, flag secret-like files (`.env*`, `*.pem`, `*.key`, `*.p12`, `id_rsa*`, `*credentials*`, `*secret*`) and dependency/build dirs, propose a `.gitignore` for them, never blind `git add -A`; wait for yes. This question is the one allowed commit prompt; a yes counts as the commit request for that baseline commit only. No AI attribution in its message (SKILL.md CLOSE). If declined: before each wave copy the owned files to the scratchpad and compare after with `diff -ru`; builders list changed files in their report.
   - Git repo: before wave 1, record `git status --porcelain` in the plan Log as the baseline.
 - Repeat the PLAN budget check before each wave using the currently eligible providers (`--only <provider>` when one remains). Apply `references/providers.md` `## Routing and budget`.
 - Split waves larger than the current slot cap before execution. Immediately before each launch, check provider eligibility per `references/providers.md` `## Routing and budget`. Follow `## Launching` for native or background CLI workers and `## Model map` for the model and effort. Follow `## No sub-agents` if delegation is unavailable.

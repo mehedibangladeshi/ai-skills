@@ -73,3 +73,4 @@ If any of the three is missing, skip the ADR. Use the format in [ADR-FORMAT.md](
 <!-- orchestrate additions -->
 
 - If a repo already has CONTEXT.md / CONTEXT-MAP.md (legacy names), read and update those in place; never rename them. New repos get GLOSSARY.md.
+- After each glossary write, tell the user in one line what you wrote; ask first before editing or removing an existing entry.
