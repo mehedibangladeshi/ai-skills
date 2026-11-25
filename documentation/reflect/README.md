@@ -60,6 +60,66 @@ Start a new Claude Code session to load it.
 ## Requirements
 
 - `git`, inside a git repository.
+- `jq`, only for the optional hook below. Without it the hook does nothing.
+
+## Optional: auto-trigger with a hook
+
+Installing the skill does not turn on automatic runs. You opt in by adding a hook to Claude Code settings. The hook script ships with the skill at `~/.claude/skills/reflect/scripts/reflect-hook.sh`. Pick one trigger or both:
+
+- **Before commit.** When Claude runs `git commit` and non-`.md` files changed, the hook blocks once per commit and tells Claude to run `/reflect`, stage the doc updates, then retry. The docs land in the same commit.
+- **On stop.** When Claude finishes a turn with uncommitted code changes, the hook blocks once per session and tells Claude to run `/reflect`. This fires at the end of each turn, not only when the session exits.
+
+Before commit, add this to `~/.claude/settings.json`:
+
+```json
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/skills/reflect/scripts/reflect-hook.sh",
+            "if": "Bash(git *)",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+The `if` filter makes Claude Code skip the script for Bash commands that aren't git. It is deliberately broad (`git *`, not `git commit:*`) so forms like `git -c key=val commit` still reach the script, which decides what counts as a commit.
+
+On stop, add this:
+
+```json
+{
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/skills/reflect/scripts/reflect-hook.sh",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+Merge these into an existing `hooks` object if you already have one. Use both blocks' entries together if you want both triggers.
+
+- **Scope.** `~/.claude/settings.json` applies to all projects. `.claude/settings.json` applies to one project and can be shared. `.claude/settings.local.json` applies to one project for you only. For a project install, the script lives at `.claude/skills/reflect/scripts/reflect-hook.sh`, so change the path to match.
+- **Skips silently** when the folder is not a git repo, the tree is clean, or only `.md` files changed.
+- **Scope of effect.** It only affects commits Claude makes inside Claude Code, not commits you make in your terminal.
+- **Disable** by removing the entries from settings.json.
+- **Shortcut.** Ask Claude "add the reflect before-commit hook to my settings" and it will make the edit.
 
 ## FAQ
 
@@ -80,5 +140,8 @@ It compares against whichever of `main` or `master` exists.
 
 **Why not update docs as I go?**
 You can. This covers the case where you didn't.
+
+**I keep forgetting to run `/reflect`.**
+Let a hook run it for you. See [Optional: auto-trigger with a hook](#optional-auto-trigger-with-a-hook).
 
 [Back to all skills](../../README.md)

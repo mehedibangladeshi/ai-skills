@@ -115,6 +115,10 @@ Tell the user:
 - The first command for each installed skill, from the table. Note that `/orchestrate` runs only when typed. `/orchestrate resume` continues an interrupted plan.
 - How to update: method 1, repeat the install; method 2, `git -C "$CLONE_DIR" pull`.
 
+## Optional: reflect hook
+
+Reflect ships an optional hook that auto-runs `/reflect` before commits or at end of turn. Install does not enable it. If reflect was installed, offer to enable it and point to `documentation/reflect/README.md` (section "Optional: auto-trigger with a hook").
+
 ## Uninstall
 
 Ask which skills to remove and confirm the list. Then, for each:
